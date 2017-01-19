@@ -18,8 +18,15 @@ export default {
     LineChart
   },
   methods: {
+    getIncidentData () {
+      $.getJSON('/api/get_incident_san_francisco', (data) => {
+        console.log('incident=>', data)
+      })
+    },
+
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
+        console.log('air=>', data)
         this.lineChartOption = {
           title: {
             text: 'Beijing AQI'
@@ -112,6 +119,7 @@ export default {
     }
   },
   created () {
+    this.getIncidentData()
     this.getLineChartViewData()
   }
 }
