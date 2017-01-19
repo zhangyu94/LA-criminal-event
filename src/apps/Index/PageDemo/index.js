@@ -4,6 +4,7 @@
 import style from './style.less'
 import template from './template.html'
 import LineChart from '../../../components/LineChart'
+import Wordle from '../../../components/Wordle'
 import $ from 'jquery'
 
 export default {
@@ -15,7 +16,8 @@ export default {
     }
   },
   components: {
-    LineChart
+    LineChart,
+    Wordle
   },
   methods: {
     getIncidentData () {
