@@ -4,6 +4,7 @@ import Reveal from 'reveal.js'
 import 'reveal.js/css/reveal.css'
 import 'reveal.js/css/theme/white.css'
 import d3 from 'd3'
+import $ from 'jquery'
 
 export default {
   template,
@@ -54,6 +55,7 @@ export default {
   },
   ready () {
     Reveal.initialize()
+    console.log('jquery', $('main'))
     // this.renderTest()
   }
 }
