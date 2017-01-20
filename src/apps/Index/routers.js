@@ -9,7 +9,15 @@ const table = [ {
   component (cb) {
     require([ 'APPS/Index/PageDemo/index' ], cb)
   }
-} ]
+}, {
+  uri: '/slide',
+  path: [ '/slide' ],
+  name: 'PageSlide',
+  text: 'Slide',
+  component (cb) {
+    require([ 'APPS/Index/PageSlide/index' ], cb)
+  }
+}]
 
 export default {
   table,
