@@ -12,7 +12,8 @@ export default {
   data () {
     return {
       style,
-      lineChartOption: null
+      lineChartOption: null,
+      wordleOption: null
     }
   },
   components: {
@@ -23,6 +24,9 @@ export default {
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
+        this.wordleOption = {
+          data
+        }
       })
     },
 
