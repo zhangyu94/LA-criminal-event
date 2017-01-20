@@ -26,11 +26,12 @@ export default {
       if (!this.chartOption) {
         return
       }
-      console.log('data', this.chartOption.data)
-
       let wordCloudFont = this.chartOption.wordCloudFont
       let wordSize = this.chartOption.wordSize
-      let subjectNames = ['Agric.', 'Arch', 'Area& Eth.', 'Arts', 'Business', 'Commun, Fam.', 'Communications', 'CS & Math', 'Education', 'Eng. Tech.', 'Engineering', 'Language', 'Health Adm.', 'Health Sci & Tech', 'Philosophy', 'Repair& Prod.', 'Bio & Physical', 'Social & Law']
+      let cloudData = []
+      for (let word in this.chartOption.data) {
+        cloudData.push(word)
+      }
 
       function calSvgSize (d3SelectSvg) {
         var strWidth = d3SelectSvg.style('width')
@@ -62,7 +63,7 @@ export default {
         .select('svg')
       let [svgWidth, svgHeight] = calSvgSize(svg)
       cloud().size([ svgWidth, svgHeight ])
-        .words(subjectNames.map(function (d, i) { return { text: d, size: wordSize } }))
+        .words(cloudData.map(function (d, i) { return { text: d, size: wordSize } }))
         .rotate(function () { return 0 })
         .font(wordCloudFont)
         .fontSize(function (d) { return d.size })
