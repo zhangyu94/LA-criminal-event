@@ -13,19 +13,24 @@ export default {
       elId: `Wordle-${(+new Date())}-${Math.random() * 100 * 1000 * 1000}`
     }
   },
-  /*
+
   watch: {
     chartOption () {
+      console.log('watch')
       this.render()
     }
   },
-  */
+
   methods: {
     render () {
-      console.log('cloud', cloud)
+      if (!this.chartOption) {
+        return
+      }
+      console.log('data', this.chartOption.data)
 
-      var wordCloudFont = 'Algerian'
-      var subjectNames = [ 'Agric.', 'Arch', 'Area& Eth.', 'Arts' ]
+      let wordCloudFont = this.chartOption.wordCloudFont
+      let wordSize = this.chartOption.wordSize
+      let subjectNames = ['Agric.', 'Arch', 'Area& Eth.', 'Arts', 'Business', 'Commun, Fam.', 'Communications', 'CS & Math', 'Education', 'Eng. Tech.', 'Engineering', 'Language', 'Health Adm.', 'Health Sci & Tech', 'Philosophy', 'Repair& Prod.', 'Bio & Physical', 'Social & Law']
 
       function calSvgSize (d3SelectSvg) {
         var strWidth = d3SelectSvg.style('width')
@@ -36,40 +41,33 @@ export default {
       }
 
       function drawCloud (data, svg) {
-        console.log('clouddata', data)
         let [svgWidth, svgHeight] = calSvgSize(svg)
-        console.log(svgWidth, svgHeight)
-        // svg.selectAll('text')
-
-        svg
-          .append('g')
-          .attr('transform', 'translate(' + svgWidth / 2 + ',' + svgHeight / 2 + ')')
+        svg.selectAll('g')
+          .data(['cloud-g'])
+          .enter().append('g')
+            .attr('transform', 'translate(' + svgWidth / 2 + ',' + svgHeight / 2 + ')')
           .selectAll('text')
-        // svg.selectAll('text')
           .data(data)
           .enter().append('text')
-          .style('font-size', function (d) { return d.size + 'px' })
-          .style('fill', 'red')
-          .attr('text-anchor', 'middle')
-          .attr('transform', function (d) {
-            return 'translate(' + [ d.x, d.y ] + ')rotate(' + d.rotate + ')'
-          })
-          .text(function (d) { return d.text })
+            .style('font-size', function (d) { return d.size + 'px' })
+            .style('font-family', function (d) { return d.font })
+            .style('fill', 'black')
+            .attr('text-anchor', 'middle')
+            .attr('transform', function (d) {
+              return 'translate(' + [ d.x, d.y ] + ')rotate(' + d.rotate + ')'
+            })
+            .text(function (d) { return d.text })
       }
       let svg = d3.select(document.getElementById(this.elId))
         .select('svg')
       let [svgWidth, svgHeight] = calSvgSize(svg)
-
       cloud().size([ svgWidth, svgHeight ])
-        .words(subjectNames.map(function (d, i) { return { text: d, size: 40 } }))
+        .words(subjectNames.map(function (d, i) { return { text: d, size: wordSize } }))
+        .rotate(function () { return 0 })
         .font(wordCloudFont)
         .fontSize(function (d) { return d.size })
         .on('end', function (d) { drawCloud(d, svg) })
         .start()
-
-      if (this.chartOption) {
-        console.log('wordleOption=>', this.chartOption)
-      }
     }
   },
   ready () {

@@ -21,11 +21,37 @@ export default {
     Wordle
   },
   methods: {
+    calCloudData (data, filter) {
+      console.log('calCloudData', data)
+      let dict = {}
+      for (let i = 0; i < data.length; ++i) {
+        let curDescript = data[i].Descript
+        if (typeof (curDescript) === 'undefined') { continue }
+        if (i === 0) {
+          console.log(curDescript)
+        }
+        let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
+        for (let j = 0; j < curList.length; ++j) {
+          let curWord = curList[j]
+          if (curWord in dict) {
+            dict[curWord]++
+          } else {
+            dict[curWord] = 1
+          }
+        }
+      }
+      console.log('dict', dict)
+      let cloudData = []
+      return cloudData
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
+        let cloudData = this.calCloudData(data, [])
         this.wordleOption = {
-          data
+          data: cloudData,
+          wordCloudFont: 'Algerian',
+          wordSize: '40'
         }
       })
     },
