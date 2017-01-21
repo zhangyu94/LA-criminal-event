@@ -86,7 +86,7 @@ export default {
           DayOfWeekList: DayOfWeekList,
           TimeList: TimeList
         }
-        console.log('matrix===>'+MatrixData)
+        // console.log('matrix===>',MatrixData)
       })
     },
 
