@@ -4,6 +4,7 @@
 import style from './style.less'
 import template from './template.html'
 import LineChart from '../../../components/LineChart'
+import Matrix from '../../../components/Matrix'
 import $ from 'jquery'
 
 export default {
@@ -11,16 +12,81 @@ export default {
   data () {
     return {
       style,
-      lineChartOption: null
+      lineChartOption: null,
+      matrixOption: null
     }
   },
   components: {
-    LineChart
+    LineChart,
+    Matrix
   },
   methods: {
+    CalTimeList (data) {
+      let TimeList = []
+      data.forEach(function (d, i) {
+        if (TimeList.indexOf(d.Time.substr(0, 2)) === -1) {
+          TimeList.push(d.Time.substr(0, 2))
+        }
+      })
+      TimeList.sort()
+      return TimeList
+    },
+    MatrixDataProcess (data) {
+      let itemList = []
+      let itemSet = []
+      let CategoryList = []
+      let totalSet = []
+      data.forEach(function (d, i) {
+        itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2), Category: d.Category })
+        if (CategoryList.indexOf(d.Category) === -1) {
+          CategoryList.push(d.Category)
+        }
+      })
+
+      CategoryList.forEach(function (d) {
+        itemSet[ d ] = []
+      })
+
+      itemList.forEach(function (d) {
+        let isIn = false
+        itemSet[ d.Category ].forEach(function (c) {
+          if (c.DayOfWeek === d.DayOfWeek && c.Time === d.Time) {
+            c.number++
+            isIn = true
+          }
+        })
+        if (isIn === false) {
+          itemSet[ d.Category ].push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+        }
+
+        let isInTotal = false
+        totalSet.forEach(function (c) {
+          if (d.DayOfWeek === c.DayOfWeek && d.Time === c.Time) {
+            c.number++
+            isInTotal = true
+          }
+        })
+        if (isInTotal === false) {
+          totalSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+        }
+      })
+      itemSet[ 'total' ] = totalSet
+      console.log('MatrixDataProcess-->', itemSet)
+
+      return itemSet
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
-        console.log('incident=>', data)
+        console.log('incident=>', data )
+        let MatrixData = this.MatrixDataProcess(data)
+        let TimeList = this.CalTimeList(data)
+        let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+        this.matrixOption = {
+          data: MatrixData,
+          DayOfWeekList: DayOfWeekList,
+          TimeList: TimeList
+        }
+        console.log('matrix===>'+MatrixData)
       })
     },
 
