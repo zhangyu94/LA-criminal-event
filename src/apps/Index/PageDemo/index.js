@@ -3,6 +3,7 @@
  */
 import style from './style.less'
 import template from './template.html'
+import Container from '../../../components/Container'
 import LineChart from '../../../components/LineChart'
 import Wordle from '../../../components/Wordle'
 import $ from 'jquery'
@@ -17,6 +18,7 @@ export default {
     }
   },
   components: {
+    Container,
     LineChart,
     Wordle
   },
@@ -25,17 +27,14 @@ export default {
       let dict = {}
       for (let i = 0; i < data.length; ++i) {
         let curDescript = data[i].Descript
-        if (typeof (curDescript) === 'undefined') { continue }
-        if (i === 0) {
-          console.log(curDescript)
-        }
-        let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
+        if (typeof (curDescript) === 'undefined') { continue } // 跳过那些没写descript的条目
+        let curList = curDescript.replace(/\(|\)|,/g, '').split(' ') // 筛掉左右括号和逗号以后切词
         for (let j = 0; j < curList.length; ++j) {
           let curWord = curList[j]
           if (curWord in dict) {
             dict[curWord]++
           } else {
-            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1}
+            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1} // 滤掉没有意义的词
             if (!(curWord in meaninglessWordDict)) {
               dict[curWord] = 1
             }
@@ -44,9 +43,9 @@ export default {
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[word])
+        countList.push(dict[word])
       }
-      let sortList = countList.sort(function (a, b) { return b - a })
+      let sortList = countList.sort(function (a, b) { return b - a }) // 直接sort是排序字符串，所以需要写compare函数
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
