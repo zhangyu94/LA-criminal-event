@@ -72,7 +72,7 @@ export default {
 
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
-        console.log('air=>', data)
+        // console.log('air=>', data)
         this.lineChartOption = {
           title: {
             text: 'Beijing AQI'

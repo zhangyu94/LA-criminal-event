@@ -15,7 +15,7 @@ export default {
   data () {
     return {
       style,
-      elId: `Container-${(+new Date())}-${Math.random() * 100 * 1000 * 1000}`
+      elId: `Container-${(+new Date())}-${~~(Math.random() * 100 * 1000 * 1000)}`
     }
   },
   watch: {
@@ -25,14 +25,12 @@ export default {
   },
   methods: {
     render () {
-      console.log('Container Render')
       let containerId = this.elId
-      d3.select(document.getElementById(this.elId))
+      d3.select('#' + containerId)
         .selectAll('.container-btn')
         .on('click', () => {
-          let container = $(this).parent()
-          console.log(container)
-          this.markContainer(containerId)
+          let container = $('#' + containerId)
+          this.markContainer(container.html())
         })
     }
   },

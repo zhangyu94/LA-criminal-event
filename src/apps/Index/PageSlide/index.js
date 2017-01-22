@@ -4,7 +4,7 @@ import Reveal from 'reveal.js'
 import 'reveal.js/css/reveal.css'
 import 'reveal.js/css/theme/white.css'
 // import d3 from 'd3'
-import $ from 'jquery'
+// import $ from 'jquery'
 import {markedContainer} from '../../../vuex/getters'
 
 export default {
@@ -27,13 +27,13 @@ export default {
   },
   components: {},
   methods: {
-    appendSlide (nodeId) {
-      if (nodeId === null) {
+    appendSlide (containerHtml) {
+      if (containerHtml === null) {
         return
       }
-      console.log('appendslide')
-      var node = document.getElementById(nodeId).cloneNode(true)
-      $('#sect2').append(node)
+      console.log('appendslide', containerHtml)
+      // console.log('template', this.template)
+      document.getElementById('sect1').innerHTML += containerHtml
     }
   },
   created () {
