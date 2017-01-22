@@ -24,6 +24,35 @@ export default {
     Wordle
   },
   methods: {
+    DataFilter (filter, data) {
+      let DataAfterFilter = []
+      let keyList = Object.keys(filter)
+      if (keyList.length === 0) {
+        DataAfterFilter = data.concat()
+      }
+      if (keyList.length > 0) {
+        data.forEach(function (d) {
+          let t = 0
+          keyList.forEach(function (k) {
+            if (k === 'Time') {
+              if (d[ k ].substr(0, 2) in filter[ k ]) {
+                t++
+              }
+            }
+            if (k !== 'Time') {
+              if (d[ k ] in filter[ k ]) {
+                t++
+              }
+            }
+          })
+          if (t === keyList.length) {
+            DataAfterFilter.push(d)
+          }
+        })
+      }
+      // console.log('DataAfterFilter-->', DataAfterFilter)
+      return DataAfterFilter
+    },
     CalTimeList (data) {
       let TimeList = []
       data.forEach(function (d, i) {
@@ -38,42 +67,42 @@ export default {
       let itemList = []
       let itemSet = []
       let CategoryList = []
-      let totalSet = []
+      // let totalSet = []
       data.forEach(function (d, i) {
-        itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2), Category: d.Category })
+        itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2) })
         if (CategoryList.indexOf(d.Category) === -1) {
           CategoryList.push(d.Category)
         }
       })
 
-      CategoryList.forEach(function (d) {
-        itemSet[ d ] = []
-      })
+      // CategoryList.forEach(function (d) {
+      //   itemSet[ d ] = []
+      // })
 
       itemList.forEach(function (d) {
         let isIn = false
-        itemSet[ d.Category ].forEach(function (c) {
+        itemSet.forEach(function (c) {
           if (c.DayOfWeek === d.DayOfWeek && c.Time === d.Time) {
             c.number++
             isIn = true
           }
         })
         if (isIn === false) {
-          itemSet[ d.Category ].push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+          itemSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
         }
 
-        let isInTotal = false
-        totalSet.forEach(function (c) {
-          if (d.DayOfWeek === c.DayOfWeek && d.Time === c.Time) {
-            c.number++
-            isInTotal = true
-          }
-        })
-        if (isInTotal === false) {
-          totalSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
-        }
+        // let isInTotal = false
+        // totalSet.forEach(function (c) {
+        //   if (d.DayOfWeek === c.DayOfWeek && d.Time === c.Time) {
+        //     c.number++
+        //     isInTotal = true
+        //   }
+        // })
+        // if (isInTotal === false) {
+        //   totalSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+        // }
       })
-      itemSet[ 'total' ] = totalSet
+      // itemSet[ 'total' ] = totalSet
       console.log('MatrixDataProcess-->', itemSet)
 
       return itemSet
@@ -81,36 +110,36 @@ export default {
     calCloudData (data, topN, filter) {
       let dict = {}
       for (let i = 0; i < data.length; ++i) {
-        let curDescript = data[i].Descript
+        let curDescript = data[ i ].Descript
         if (typeof (curDescript) === 'undefined') { continue }
         if (i === 0) {
           console.log(curDescript)
         }
         let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
         for (let j = 0; j < curList.length; ++j) {
-          let curWord = curList[j]
+          let curWord = curList[ j ]
           if (curWord in dict) {
-            dict[curWord]++
+            dict[ curWord ]++
           } else {
-            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1}
+            let meaninglessWordDict = { 'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1 }
             if (!(curWord in meaninglessWordDict)) {
-              dict[curWord] = 1
+              dict[ curWord ] = 1
             }
           }
         }
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[word])
+        countList.push(+dict[ word ])
       }
       let sortList = countList.sort(function (a, b) { return b - a })
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
-        let curCount = dict[word]
+        let curCount = dict[ word ]
         for (let i = 0; i < sortList.length; ++i) {
-          if (curCount === sortList[i]) {
-            cloudData[word] = curCount
+          if (curCount === sortList[ i ]) {
+            cloudData[ word ] = curCount
           }
         }
       }
@@ -119,7 +148,16 @@ export default {
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
-        let MatrixData = this.MatrixDataProcess(data)
+        let filter = {
+          // 'Date': { '11/25/2016': 1 },
+          // 'DayOfWeek': { 'Friday': 1 },
+          // 'Time': { '18': 1 },
+          // 'Category': { 'NON-CRIMINAL': 1 },
+          // 'Resolution': { 'LOCATED': 1 }
+        }
+        // console.log('filter-->', filter)
+        let DataFilter = this.DataFilter(filter, data)
+        let MatrixData = this.MatrixDataProcess(DataFilter)
         let TimeList = this.CalTimeList(data)
         let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
         this.matrixOption = {
@@ -136,7 +174,6 @@ export default {
         }
       })
     },
-
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
         console.log('air=>', data)

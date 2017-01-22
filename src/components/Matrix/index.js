@@ -15,12 +15,12 @@ export default {
 
   watch: {
     chartOption () {
-      this.render('total')
+      this.render()
     }
   },
 
   methods: {
-    render (filter) {
+    render () {
       if (!this.chartOption) {
         return
       }
@@ -69,10 +69,10 @@ export default {
       //   .style('dominant-baseline', 'text-before-edge')
       //   .attr('transform', function(d, i){ return 'translate(' + i * gridWidth + ',-10)';})
       //   .attr('class', 'TimeName');
-      let myData = matrixData.data[filter]
+      let myData = matrixData.data
 
       let colorScale = d3.scale.quantile()
-        .domain(d3.extent(matrixData.data[filter], function (d) { return d.number }))
+        .domain(d3.extent(matrixData.data, function (d) { return d.number }))
         .range(colors)
 
       let cards = svg.selectAll('.NumberRect')
@@ -124,6 +124,6 @@ export default {
     }
   },
   ready () {
-    this.render('total')
+    this.render()
   }
 }
