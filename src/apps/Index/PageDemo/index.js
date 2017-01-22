@@ -5,6 +5,7 @@ import style from './style.less'
 import template from './template.html'
 import LineChart from '../../../components/LineChart'
 import Matrix from '../../../components/Matrix'
+import Wordle from '../../../components/Wordle'
 import $ from 'jquery'
 
 export default {
@@ -13,12 +14,14 @@ export default {
     return {
       style,
       lineChartOption: null,
-      matrixOption: null
+      matrixOption: null,
+      wordleOption: null
     }
   },
   components: {
     LineChart,
-    Matrix
+    Matrix,
+    Wordle
   },
   methods: {
     CalTimeList (data) {
@@ -75,6 +78,44 @@ export default {
 
       return itemSet
     },
+    calCloudData (data, topN, filter) {
+      let dict = {}
+      for (let i = 0; i < data.length; ++i) {
+        let curDescript = data[i].Descript
+        if (typeof (curDescript) === 'undefined') { continue }
+        if (i === 0) {
+          console.log(curDescript)
+        }
+        let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
+        for (let j = 0; j < curList.length; ++j) {
+          let curWord = curList[j]
+          if (curWord in dict) {
+            dict[curWord]++
+          } else {
+            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1}
+            if (!(curWord in meaninglessWordDict)) {
+              dict[curWord] = 1
+            }
+          }
+        }
+      }
+      let countList = []
+      for (let word in dict) {
+        countList.push(+dict[word])
+      }
+      let sortList = countList.sort(function (a, b) { return b - a })
+      sortList = sortList.slice(0, topN - 1)
+      let cloudData = {}
+      for (let word in dict) {
+        let curCount = dict[word]
+        for (let i = 0; i < sortList.length; ++i) {
+          if (curCount === sortList[i]) {
+            cloudData[word] = curCount
+          }
+        }
+      }
+      return cloudData
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
@@ -87,6 +128,12 @@ export default {
           TimeList: TimeList
         }
         // console.log('matrix===>',MatrixData)
+        let cloudData = this.calCloudData(data, 10, [])
+        this.wordleOption = {
+          data: cloudData,
+          wordCloudFont: 'Algerian',
+          wordSize: '40'
+        }
       })
     },
 
