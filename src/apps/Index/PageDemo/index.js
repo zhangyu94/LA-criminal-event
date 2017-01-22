@@ -3,9 +3,11 @@
  */
 import style from './style.less'
 import template from './template.html'
+import Container from '../../../components/Container'
 import LineChart from '../../../components/LineChart'
 import Matrix from '../../../components/Matrix'
 import Wordle from '../../../components/Wordle'
+import BarChart from '../../../components/BarChart'
 import $ from 'jquery'
 
 export default {
@@ -13,14 +15,18 @@ export default {
   data () {
     return {
       style,
+      barChartOptionCat: null,
+      barChartOptionRes: null,
       lineChartOption: null,
       matrixOption: null,
       wordleOption: null
     }
   },
   components: {
+    Container,
     LineChart,
     Matrix,
+    BarChart,
     Wordle
   },
   methods: {
@@ -130,9 +136,9 @@ export default {
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[ word ])
+        countList.push(dict[word])
       }
-      let sortList = countList.sort(function (a, b) { return b - a })
+      let sortList = countList.sort(function (a, b) { return b - a }) // 直接sort是排序字符串，所以需要写compare函数
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
@@ -145,6 +151,66 @@ export default {
       }
       return cloudData
     },
+
+    CrimeCategoryData (data) {
+      let Category = []
+      let CategoryCount = []
+      let dictCategory = {}
+      for (let i = 0; i < data.length; i++) {
+        let curCategory = data[ i ].Category
+        if (curCategory in dictCategory) {
+          dictCategory[ curCategory ]++
+        } else {
+          dictCategory[ curCategory ] = 1
+        }
+      }
+
+      for (let category in dictCategory) {
+        Category.push(category)
+        // let curCount = dictCategory[category]
+        // CategoryData[i][0] = category
+        // CategoryData[i][1] = dictCategory[category]
+        // i++
+      }
+      for (let i = 0; i < Category.length; i++) {
+        CategoryCount[ i ] = dictCategory[ Category[ i ] ]
+      }
+
+      let CategoryData = []
+      for (let i = 0; i < Category.length; i++) {
+        CategoryData.push({ data: CategoryCount[ i ], keyword: Category[ i ] })
+      }
+      // console.log(CategoryData)
+      return [ CategoryData, CategoryCount ]
+    },
+    CrimeResolutionData (data) {
+      let Resolution = []
+      let ResolutionCount = []
+      let dictResolution = {}
+      for (let i = 0; i < data.length; i++) {
+        let curResolution = data[ i ].Resolution
+        if (curResolution in dictResolution) {
+          dictResolution[ curResolution ]++
+        } else {
+          dictResolution[ curResolution ] = 1
+        }
+      }
+
+      for (let resolution in dictResolution) {
+        Resolution.push(resolution)
+      }
+      for (let i = 0; i < Resolution.length; i++) {
+        ResolutionCount[ i ] = dictResolution[ Resolution[ i ] ]
+      }
+
+      let ResolutionData = []
+      for (let i = 0; i < Resolution.length; i++) {
+        ResolutionData.push({ data: ResolutionCount[ i ], keyword: Resolution[ i ] })
+      }
+      // console.log(ResolutionData)
+      return [ ResolutionData, ResolutionCount ]
+    },
+
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
@@ -173,10 +239,49 @@ export default {
           wordSize: '40'
         }
       })
+        this.calMatrixOption(data)
+        // console.log('matrix===>',MatrixData)
+        this.calWordleOption(data)
+        this.calBarChartOption(data)
+      }
+    },
+    calMatrixOption (data) {
+      let MatrixData = this.MatrixDataProcess(data)
+      let TimeList = this.CalTimeList(data)
+      let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+      this.matrixOption = {
+        data: MatrixData,
+        DayOfWeekList: DayOfWeekList,
+        TimeList: TimeList
+      }
+    },
+    calWordleOption (data) {
+      let cloudData = this.calCloudData(data, 10, [])
+      this.wordleOption = {
+        data: cloudData,
+        wordCloudFont: 'Algerian',
+        wordSize: '40'
+      }
+    },
+    calBarChartOption (data) {
+      // console.log('incident=>', data)
+      let [ categoryData, catCount ] = this.CrimeCategoryData(data)
+      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
+      this.barChartOptionCat = {
+        in: categoryData,
+        count: catCount,
+        jud: true
+      }
+      this.barChartOptionRes = {
+        in: resolutionData,
+        count: resCount,
+        jud: true
+      }
+      // console.log(resolutionData)
     },
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
-        console.log('air=>', data)
+        // console.log('air=>', data)
         this.lineChartOption = {
           title: {
             text: 'Beijing AQI'
@@ -270,6 +375,6 @@ export default {
   },
   created () {
     this.getIncidentData()
-    this.getLineChartViewData()
+    // this.getLineChartViewData()
   }
 }
