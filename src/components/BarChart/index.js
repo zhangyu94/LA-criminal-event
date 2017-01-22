@@ -25,7 +25,6 @@ export default {
       if (!this.chartOption) {
         return
       }
-      console.log('barchart')
 
       let svg = d3.select(document.getElementById(this.elId))
         .select('svg')
@@ -36,8 +35,6 @@ export default {
       // console.log(height)
 
       let dataset = this.chartOption.in
-
-      console.log(dataset)
 
       let xScale = d3.scale.ordinal()
         .domain(d3.range(dataset.length))
@@ -71,13 +68,11 @@ export default {
           return xScale(i) + rectPadding / 2
         })
         .attr('y', function (d) {
-          console.log(d)
           return yScale(d.data)
         })
         .attr('width', xScale.rangeBand() - rectPadding)
         .attr('height', function (d) {
           let h = height - yScale(d.data)
-          // console.log(h)
           return h
         })
         .append('svg:title')

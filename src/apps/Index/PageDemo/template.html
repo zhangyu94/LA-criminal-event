@@ -8,9 +8,12 @@
     <div class= "{{ style['area']}}" id="{{ style['area-hist-resolution']}}">
         <bar-chart :chart-option="barChartOptionRes"></bar-chart>
     </div>
-    <div class= "{{ style['area']}}" id="{{ style['area-wordle']}}">里面放张宇的wordcloud
+    <div class= "{{ style['area']}}" id="{{ style['area-wordle']}}">
+        <!--
         <line-chart :chart-option="lineChartOption"
                     @chart-click="onChartClick">
         </line-chart>
+        -->
+        <wordle :chart-option="wordleOption"></wordle>
     </div>
 </div>

@@ -3,6 +3,7 @@
  */
 import style from './style.less'
 import template from './template.html'
+import Wordle from '../../../components/Wordle'
 import BarChart from '../../../components/BarChart'
 import $ from 'jquery'
 
@@ -11,15 +12,55 @@ export default {
   data () {
     return {
       style,
-      // lineChartOption: null,
+      wordleOption: null,
       barChartOptionCat: null,
       barChartOptionRes: null
     }
   },
   components: {
-    BarChart
+    BarChart,
+    Wordle
   },
   methods: {
+    calCloudData (data, topN, filter) {
+      let dict = {}
+      for (let i = 0; i < data.length; ++i) {
+        let curDescript = data[i].Descript
+        if (typeof (curDescript) === 'undefined') { continue }
+        if (i === 0) {
+          console.log(curDescript)
+        }
+        let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
+        for (let j = 0; j < curList.length; ++j) {
+          let curWord = curList[j]
+          if (curWord in dict) {
+            dict[curWord]++
+          } else {
+            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1}
+            if (!(curWord in meaninglessWordDict)) {
+              dict[curWord] = 1
+            }
+          }
+        }
+      }
+      let countList = []
+      for (let word in dict) {
+        countList.push(+dict[word])
+      }
+      let sortList = countList.sort(function (a, b) { return b - a })
+      sortList = sortList.slice(0, topN - 1)
+      let cloudData = {}
+      for (let word in dict) {
+        let curCount = dict[word]
+        for (let i = 0; i < sortList.length; ++i) {
+          if (curCount === sortList[i]) {
+            cloudData[word] = curCount
+          }
+        }
+      }
+      return cloudData
+    },
+
     CrimeCategoryData (data) {
       let Category = []
       let CategoryCount = []
@@ -77,6 +118,18 @@ export default {
       }
       // console.log(ResolutionData)
       return [ResolutionData, ResolutionCount]
+    },
+
+    getIncidentData () {
+      $.getJSON('/api/get_incident_san_francisco', (data) => {
+        console.log('incident=>', data)
+        let cloudData = this.calCloudData(data, 10, [])
+        this.wordleOption = {
+          data: cloudData,
+          wordCloudFont: 'Algerian',
+          wordSize: '40'
+        }
+      })
     },
 
     getBarChartData () {
@@ -193,8 +246,8 @@ export default {
     }
   },
   created () {
-    // this.getIncidentData()
+    this.getIncidentData()
     this.getBarChartData()
-    this.getLineChartViewData()
+    // this.getLineChartViewData()
   }
 }
