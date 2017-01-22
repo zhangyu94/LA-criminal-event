@@ -85,36 +85,36 @@ export default {
     calCloudData (data, topN, filter) {
       let dict = {}
       for (let i = 0; i < data.length; ++i) {
-        let curDescript = data[i].Descript
+        let curDescript = data[ i ].Descript
         if (typeof (curDescript) === 'undefined') { continue }
         if (i === 0) {
           console.log(curDescript)
         }
         let curList = curDescript.replace(/\(|\)|,/g, '').split(' ')
         for (let j = 0; j < curList.length; ++j) {
-          let curWord = curList[j]
+          let curWord = curList[ j ]
           if (curWord in dict) {
-            dict[curWord]++
+            dict[ curWord ]++
           } else {
-            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1}
+            let meaninglessWordDict = { 'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1 }
             if (!(curWord in meaninglessWordDict)) {
-              dict[curWord] = 1
+              dict[ curWord ] = 1
             }
           }
         }
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[word])
+        countList.push(+dict[ word ])
       }
       let sortList = countList.sort(function (a, b) { return b - a })
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
-        let curCount = dict[word]
+        let curCount = dict[ word ]
         for (let i = 0; i < sortList.length; ++i) {
-          if (curCount === sortList[i]) {
-            cloudData[word] = curCount
+          if (curCount === sortList[ i ]) {
+            cloudData[ word ] = curCount
           }
         }
       }
@@ -126,11 +126,11 @@ export default {
       let CategoryCount = []
       let dictCategory = {}
       for (let i = 0; i < data.length; i++) {
-        let curCategory = data[i].Category
+        let curCategory = data[ i ].Category
         if (curCategory in dictCategory) {
-          dictCategory[curCategory]++
+          dictCategory[ curCategory ]++
         } else {
-          dictCategory[curCategory] = 1
+          dictCategory[ curCategory ] = 1
         }
       }
 
@@ -142,26 +142,26 @@ export default {
         // i++
       }
       for (let i = 0; i < Category.length; i++) {
-        CategoryCount[i] = dictCategory[Category[i]]
+        CategoryCount[ i ] = dictCategory[ Category[ i ] ]
       }
 
       let CategoryData = []
       for (let i = 0; i < Category.length; i++) {
-        CategoryData.push({ data: CategoryCount[i], keyword: Category[i] })
+        CategoryData.push({ data: CategoryCount[ i ], keyword: Category[ i ] })
       }
       // console.log(CategoryData)
-      return [CategoryData, CategoryCount]
+      return [ CategoryData, CategoryCount ]
     },
     CrimeResolutionData (data) {
       let Resolution = []
       let ResolutionCount = []
       let dictResolution = {}
       for (let i = 0; i < data.length; i++) {
-        let curResolution = data[i].Resolution
+        let curResolution = data[ i ].Resolution
         if (curResolution in dictResolution) {
-          dictResolution[curResolution]++
+          dictResolution[ curResolution ]++
         } else {
-          dictResolution[curResolution] = 1
+          dictResolution[ curResolution ] = 1
         }
       }
 
@@ -169,55 +169,59 @@ export default {
         Resolution.push(resolution)
       }
       for (let i = 0; i < Resolution.length; i++) {
-        ResolutionCount[i] = dictResolution[Resolution[i]]
+        ResolutionCount[ i ] = dictResolution[ Resolution[ i ] ]
       }
 
       let ResolutionData = []
       for (let i = 0; i < Resolution.length; i++) {
-        ResolutionData.push({ data: ResolutionCount[i], keyword: Resolution[i] })
+        ResolutionData.push({ data: ResolutionCount[ i ], keyword: Resolution[ i ] })
       }
       // console.log(ResolutionData)
-      return [ResolutionData, ResolutionCount]
+      return [ ResolutionData, ResolutionCount ]
     },
 
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
-        let MatrixData = this.MatrixDataProcess(data)
-        let TimeList = this.CalTimeList(data)
-        let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
-        this.matrixOption = {
-          data: MatrixData,
-          DayOfWeekList: DayOfWeekList,
-          TimeList: TimeList
-        }
+        this.calMatrixOption(data)
         // console.log('matrix===>',MatrixData)
-        let cloudData = this.calCloudData(data, 10, [])
-        this.wordleOption = {
-          data: cloudData,
-          wordCloudFont: 'Algerian',
-          wordSize: '40'
-        }
+        this.calWordleOption(data)
+        this.calBarChartOption(data)
       })
     },
-
-    getBarChartData () {
-      $.getJSON('/api/get_incident_san_francisco', (data) => {
-        // console.log('incident=>', data)
-        let [categoryData, catCount] = this.CrimeCategoryData(data)
-        let [resolutionData, resCount] = this.CrimeResolutionData(data)
-        this.barChartOptionCat = {
-          in: categoryData,
-          count: catCount,
-          jud: true
-        }
-        this.barChartOptionRes = {
-          in: resolutionData,
-          count: resCount,
-          jud: true
-        }
-        // console.log(resolutionData)
-      })
+    calMatrixOption (data) {
+      let MatrixData = this.MatrixDataProcess(data)
+      let TimeList = this.CalTimeList(data)
+      let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+      this.matrixOption = {
+        data: MatrixData,
+        DayOfWeekList: DayOfWeekList,
+        TimeList: TimeList
+      }
+    },
+    calWordleOption (data) {
+      let cloudData = this.calCloudData(data, 10, [])
+      this.wordleOption = {
+        data: cloudData,
+        wordCloudFont: 'Algerian',
+        wordSize: '40'
+      }
+    },
+    calBarChartOption (data) {
+      // console.log('incident=>', data)
+      let [ categoryData, catCount ] = this.CrimeCategoryData(data)
+      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
+      this.barChartOptionCat = {
+        in: categoryData,
+        count: catCount,
+        jud: true
+      }
+      this.barChartOptionRes = {
+        in: resolutionData,
+        count: resCount,
+        jud: true
+      }
+      // console.log(resolutionData)
     },
 
     getLineChartViewData () {
@@ -316,7 +320,6 @@ export default {
   },
   created () {
     this.getIncidentData()
-    this.getBarChartData()
     // this.getLineChartViewData()
   }
 }
