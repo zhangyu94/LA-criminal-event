@@ -5,7 +5,9 @@ import style from './style.less'
 import template from './template.html'
 import LineChart from '../../../components/LineChart'
 import Wordle from '../../../components/Wordle'
+import Calendar from '../../../components/Calendar'
 import $ from 'jquery'
+import d3 from 'd3'
 
 export default {
   template,
@@ -13,12 +15,14 @@ export default {
     return {
       style,
       lineChartOption: null,
-      wordleOption: null
+      wordleOption: null,
+      calendarOption: null
     }
   },
   components: {
     LineChart,
-    Wordle
+    Wordle,
+    Calendar
   },
   methods: {
     calCloudData (data, topN, filter) {
@@ -59,6 +63,39 @@ export default {
       }
       return cloudData
     },
+    calCalendarData (data) {
+      let calData = d3.nest()
+        .key(function (d) {
+          let calDate = d.Date + '/'
+          let calI = 0
+          let calMonth = ''
+          let calDay = ''
+          let calYear = ''
+          for (calI = 0; calDate[calI] !== '/'; calI++) {
+            calMonth = calMonth + calDate[calI]
+          }
+          if (calMonth.length === 1) calMonth = '0' + calMonth
+          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
+            calDay = calDay + calDate[calI]
+          }
+          if (calDay.length === 1) calDay = '0' + calDay
+          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
+            calYear = calYear + calDate[calI]
+          }
+          return calYear + '-' + calMonth + '-' + calDay
+        })
+        .rollup(function (d) {
+          let calLen = d.length
+          let calSum = 0
+          for (let calI = 0; calI < calLen; calI++) {
+            calSum = calSum + 1
+          }
+          return calSum
+        })
+        .map(data)
+      console.log(calData)
+      return calData
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
@@ -67,6 +104,11 @@ export default {
           data: cloudData,
           wordCloudFont: 'Algerian',
           wordSize: '40'
+        }
+        let calendarData = this.calCalendarData(data)
+        this.calendarOption = {
+          data: calendarData,
+          calendarFont: 'Algerian'
         }
       })
     },

@@ -1,6 +1,9 @@
 <div :id="style.PageDemo">
     <div class= "{{ style['area']}}" id="{{ style['area-matrix']}}">里面放冯璐的matrix以及上侧和右侧的histogram</div>
-    <div class= "{{ style['area']}}" id="{{ style['area-calendar']}}">里面放蒋瑞柯的3个月的calendar</div>
+    <div class= "{{ style['area']}}" id="{{ style['area-calendar']}}">
+        <!--里面放蒋瑞柯的3个月的calendar-->
+        <calendar :chart-option="calendarOption"></calendar>
+    </div>
     <div class= "{{ style['area']}}" id="{{ style['area-map']}}">里面放刘强强的map</div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-category']}}">里面放马楠的犯罪类别的直方图</div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-resolution']}}">里面放马楠的解决方式的直方图</div>
