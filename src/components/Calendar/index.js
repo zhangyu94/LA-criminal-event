@@ -30,7 +30,7 @@ export default {
         console.log('calendar: no chartOption')
         return
       }
-      let calendarFont = this.chartOption.calendarFont
+      // let calendarFont = this.chartOption.calendarFont
       let calendarData = {}
       let shiftKey = false
 
