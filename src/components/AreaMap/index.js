@@ -72,6 +72,11 @@ export default {
           calData.push({ 'latLng': loc, 'data': merge[ key ] })
         }
         cities = calData
+        L.heatLayer([], {
+          radius: 10,
+          blur: 15,
+          maxZoom: 17
+        }).addTo(map)
         L.heatLayer(quakePoints, {
           radius: 10,
           blur: 15,
