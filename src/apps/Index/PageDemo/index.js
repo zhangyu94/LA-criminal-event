@@ -3,11 +3,14 @@
  */
 import style from './style.less'
 import template from './template.html'
+import Container from '../../../components/Container'
 import LineChart from '../../../components/LineChart'
 import Matrix from '../../../components/Matrix'
 import Wordle from '../../../components/Wordle'
 import BarChart from '../../../components/BarChart'
+import Calendar from '../../../components/Calendar'
 import $ from 'jquery'
+import d3 from 'd3'
 
 export default {
   template,
@@ -18,14 +21,17 @@ export default {
       barChartOptionRes: null,
       lineChartOption: null,
       matrixOption: null,
-      wordleOption: null
+      wordleOption: null,
+      calendarOption: null
     }
   },
   components: {
+    Container,
     LineChart,
     Matrix,
     BarChart,
-    Wordle
+    Wordle,
+    Calendar
   },
   methods: {
     CalTimeList (data) {
@@ -85,7 +91,7 @@ export default {
     calCloudData (data, topN, filter) {
       let dict = {}
       for (let i = 0; i < data.length; ++i) {
-        let curDescript = data[ i ].Descript
+        let curDescript = data[i].Descript
         if (typeof (curDescript) === 'undefined') { continue }
         if (i === 0) {
           console.log(curDescript)
@@ -96,7 +102,7 @@ export default {
           if (curWord in dict) {
             dict[ curWord ]++
           } else {
-            let meaninglessWordDict = { 'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1 }
+            let meaninglessWordDict = {'A': 1, 'OF': 1, 'OR': 1, 'FROM': 1} // 滤掉没有意义的词
             if (!(curWord in meaninglessWordDict)) {
               dict[ curWord ] = 1
             }
@@ -105,9 +111,9 @@ export default {
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[ word ])
+        countList.push(dict[word])
       }
-      let sortList = countList.sort(function (a, b) { return b - a })
+      let sortList = countList.sort(function (a, b) { return b - a }) // 直接sort是排序字符串，所以需要写compare函数
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
@@ -180,6 +186,39 @@ export default {
       return [ ResolutionData, ResolutionCount ]
     },
 
+    calCalendarData (data) {
+      let calData = d3.nest()
+        .key(function (d) {
+          let calDate = d.Date + '/'
+          let calI = 0
+          let calMonth = ''
+          let calDay = ''
+          let calYear = ''
+          for (calI = 0; calDate[calI] !== '/'; calI++) {
+            calMonth = calMonth + calDate[calI]
+          }
+          if (calMonth.length === 1) calMonth = '0' + calMonth
+          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
+            calDay = calDay + calDate[calI]
+          }
+          if (calDay.length === 1) calDay = '0' + calDay
+          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
+            calYear = calYear + calDate[calI]
+          }
+          return calYear + '-' + calMonth + '-' + calDay
+        })
+        .rollup(function (d) {
+          let calLen = d.length
+          let calSum = 0
+          for (let calI = 0; calI < calLen; calI++) {
+            calSum = calSum + 1
+          }
+          return calSum
+        })
+        .map(data)
+      console.log(calData)
+      return calData
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
         console.log('incident=>', data)
@@ -187,6 +226,11 @@ export default {
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
         this.calBarChartOption(data)
+        let calendarData = this.calCalendarData(data)
+        this.calendarOption = {
+          data: calendarData,
+          calendarFont: 'Algerian'
+        }
       })
     },
     calMatrixOption (data) {
