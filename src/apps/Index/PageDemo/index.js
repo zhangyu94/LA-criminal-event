@@ -11,78 +11,96 @@ export default {
   data () {
     return {
       style,
-      lineChartOption: null,
-      dataSet: [ 10, 20, 30, 40, 33, 24, 12, 5, 100, 35 ]
-      // barcharOption: null
+      // lineChartOption: null,
+      barChartOptionCat: null,
+      barChartOptionRes: null
     }
   },
   components: {
-    // LineChart,
     BarChart
   },
   methods: {
-    // getIncidentData () {
-    //   $.getJSON('/api/get_incident_san_francisco', (data) => {
-    //     console.log('incident=>', data)
-    //   })
-    // },
+    CrimeCategoryData (data) {
+      let Category = []
+      let CategoryCount = []
+      let dictCategory = {}
+      for (let i = 0; i < data.length; i++) {
+        let curCategory = data[i].Category
+        if (curCategory in dictCategory) {
+          dictCategory[curCategory]++
+        } else {
+          dictCategory[curCategory] = 1
+        }
+      }
 
-    // getBarChartData () {
-    //   $.getJSON('/api/get_incident_san_francisco', (data) => {
-    //     console.log('incident=>', data)
-    //     let category = []
-    //     for (var i = 0; i < 20; i++) {
-    //       category[i] = 0
-    //     }
-    //     for (i = 0; i < data.length; i++) {
-    //       if (data[i].Category === 'NON-CRIMINAL') {
-    //         category[0] = category[0] + 1
-    //       } else if (data[i].Category === 'MISSING PERSON') {
-    //         category[1] = category[1] + 1
-    //       } else if (data[i].Category === 'VEHICLE THEFT') {
-    //         category[2] = category[1] + 1
-    //       } else if (data[i].Category === 'ROBBERY') {
-    //         category[3] = category[1] + 1
-    //       } else if (data[i].Category === 'ASSAULT') {
-    //         category[4] = category[1] + 1
-    //       } else if (data[i].Category === 'OTHER OFFENSES') {
-    //         category[5] = category[1] + 1
-    //       } else if (data[i].Category === 'WARRANTS') {
-    //         category[6] = category[1] + 1
-    //       } else if (data[i].Category === 'SUSPICIOUS OCC') {
-    //         category[7] = category[1] + 1
-    //       } else if (data[i].Category === 'WEAPON LAWS') {
-    //         category[8] = category[1] + 1
-    //       } else if (data[i].Category === 'FRAUD') {
-    //         category[9] = category[1] + 1
-    //       } else if (data[i].Category === 'LARCENY/THEFT') {
-    //         category[10] = category[1] + 1
-    //       } else if (data[i].Category === 'BURGLARY') {
-    //         category[11] = category[1] + 1
-    //       } else if (data[i].Category === 'DRUG/NARCOTIC') {
-    //         category[12] = category[1] + 1
-    //       } else if (data[i].Category === 'VANDALISM') {
-    //         category[13] = category[1] + 1
-    //       } else if (data[i].Category === 'SECONDARY CODES') {
-    //         category[14] = category[1] + 1
-    //       } else if (data[i].Category === 'DISORDERLY CONDUCT') {
-    //         category[15] = category[1] + 1
-    //       } else if (data[i].Category === 'TRESPASS') {
-    //         category[16] = category[1] + 1
-    //       } else if (data[i].Category === 'PROSTITUTION') {
-    //         category[17] = category[1] + 1
-    //       } else if (data[i].Category === 'SEX OFFENSES, FORCIBLE') {
-    //         category[18] = category[1] + 1
-    //       } else if (data[i].Category === 'RECOVERED VEHICLE') {
-    //         category[19] = category[1] + 1
-    //       }
-    //     }
-    //   })
-    // },
+      for (let category in dictCategory) {
+        Category.push(category)
+        // let curCount = dictCategory[category]
+        // CategoryData[i][0] = category
+        // CategoryData[i][1] = dictCategory[category]
+        // i++
+      }
+      for (let i = 0; i < Category.length; i++) {
+        CategoryCount[i] = dictCategory[Category[i]]
+      }
+
+      let CategoryData = []
+      for (let i = 0; i < Category.length; i++) {
+        CategoryData.push({ data: CategoryCount[i], keyword: Category[i] })
+      }
+      // console.log(CategoryData)
+      return [CategoryData, CategoryCount]
+    },
+    CrimeResolutionData (data) {
+      let Resolution = []
+      let ResolutionCount = []
+      let dictResolution = {}
+      for (let i = 0; i < data.length; i++) {
+        let curResolution = data[i].Resolution
+        if (curResolution in dictResolution) {
+          dictResolution[curResolution]++
+        } else {
+          dictResolution[curResolution] = 1
+        }
+      }
+
+      for (let resolution in dictResolution) {
+        Resolution.push(resolution)
+      }
+      for (let i = 0; i < Resolution.length; i++) {
+        ResolutionCount[i] = dictResolution[Resolution[i]]
+      }
+
+      let ResolutionData = []
+      for (let i = 0; i < Resolution.length; i++) {
+        ResolutionData.push({ data: ResolutionCount[i], keyword: Resolution[i] })
+      }
+      // console.log(ResolutionData)
+      return [ResolutionData, ResolutionCount]
+    },
+
+    getBarChartData () {
+      $.getJSON('/api/get_incident_san_francisco', (data) => {
+        // console.log('incident=>', data)
+        let [categoryData, catCount] = this.CrimeCategoryData(data)
+        let [resolutionData, resCount] = this.CrimeResolutionData(data)
+        this.barChartOptionCat = {
+          in: categoryData,
+          count: catCount,
+          jud: true
+        }
+        this.barChartOptionRes = {
+          in: resolutionData,
+          count: resCount,
+          jud: true
+        }
+        // console.log(resolutionData)
+      })
+    },
 
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
-        console.log('air=>', data)
+        // console.log('air=>', data)
         this.lineChartOption = {
           title: {
             text: 'Beijing AQI'
@@ -176,6 +194,7 @@ export default {
   },
   created () {
     // this.getIncidentData()
+    this.getBarChartData()
     this.getLineChartViewData()
   }
 }
