@@ -186,7 +186,8 @@ export default {
         this.calMatrixOption(data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
-        this.calBarChartOption(data)
+        this.calCrimeCatOption(data)
+        this.calCrimeResOption(data)
       })
     },
     calMatrixOption (data) {
@@ -207,21 +208,21 @@ export default {
         wordSize: '40'
       }
     },
-    calBarChartOption (data) {
-      // console.log('incident=>', data)
+    calCrimeCatOption(data) {
       let [ categoryData, catCount ] = this.CrimeCategoryData(data)
-      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
       this.barChartOptionCat = {
         in: categoryData,
         count: catCount,
         jud: true
       }
+    },
+    calCrimeResOption (data) {
+      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
       this.barChartOptionRes = {
         in: resolutionData,
         count: resCount,
         jud: true
       }
-      // console.log(resolutionData)
     },
 
     getLineChartViewData () {
