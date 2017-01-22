@@ -127,4 +127,3 @@ export default {
     this.render('total')
   }
 }
-
