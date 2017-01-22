@@ -77,7 +77,7 @@ export default {
     },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
-        console.log('incident=>', data )
+        console.log('incident=>', data)
         let MatrixData = this.MatrixDataProcess(data)
         let TimeList = this.CalTimeList(data)
         let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
