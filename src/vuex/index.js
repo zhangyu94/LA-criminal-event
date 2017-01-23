@@ -48,7 +48,7 @@ const mutations = {
   [types.FILTER_RESOLUTION] (state, filteredResolution) {
     state.filteredResolution = filteredResolution
     console.log(state)
-  },
+  }
 }
 
 export default new Vuex.Store({
