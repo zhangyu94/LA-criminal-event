@@ -30,7 +30,9 @@ export default {
         .selectAll('.container-btn')
         .on('click', () => {
           let container = $('#' + containerId)
-          this.markContainer(container.html())
+          this.markContainer({
+            content: container.find('div').html()
+          })
         })
     }
   },

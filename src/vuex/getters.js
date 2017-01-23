@@ -11,4 +11,4 @@ export const activeUri = (state) => {
 
 export const activeRouter = state => state.activeRouter
 
-export const markedContainer = state => state.markedContainer
+export const markedContainerList = state => state.markedContainerList

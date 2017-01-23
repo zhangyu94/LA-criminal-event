@@ -16,7 +16,7 @@ const state = {
   status: {
     url: null
   },
-  markedContainer: null
+  markedContainerList: []
 }
 
 const mutations = {
@@ -26,7 +26,7 @@ const mutations = {
     utils.setStatus(state, 'url', types.URL_CHANGE)
   },
   [types.MARK_CONTAINER] (state, markedContainer) {
-    state.markedContainer = markedContainer
+    state.markedContainerList.push(markedContainer)
     console.log(state)
   }
 }

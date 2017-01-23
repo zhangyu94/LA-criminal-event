@@ -5,13 +5,13 @@ import 'reveal.js/css/reveal.css'
 import 'reveal.js/css/theme/white.css'
 // import d3 from 'd3'
 // import $ from 'jquery'
-import {markedContainer} from '../../../vuex/getters'
+import {markedContainerList} from '../../../vuex/getters'
 
 export default {
   template,
   vuex: {
     getters: {
-      markedContainer
+      markedContainerList
     }
   },
   data () {
@@ -21,7 +21,8 @@ export default {
   },
   watch: {
     markedContainer () {
-      console.log('PageSlide markedContainer', this.markedContainer)
+      this.LOGS.log('PageSlide markedContainer', this.markedContainerList)
+      // Reveal.initialize()
     }
   },
   components: {},
@@ -32,7 +33,7 @@ export default {
     this.LOGS.log('My Name1', 123, 456, 788, { a: 123 })
   },
   ready () {
-    console.log('PageSlide render markedContainer', this.markedContainer)
+    this.LOGS.log('PageSlide render markedContainer', this.markedContainerList)
     Reveal.initialize()
   }
 }
