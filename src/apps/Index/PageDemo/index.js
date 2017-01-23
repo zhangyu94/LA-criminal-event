@@ -11,9 +11,16 @@ import BarChart from '../../../components/BarChart'
 import Calendar from '../../../components/Calendar'
 import $ from 'jquery'
 import d3 from 'd3'
+import storage from '../../../commons/storage'
 
 export default {
   template,
+  props: {
+    token: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       style,
@@ -413,6 +420,10 @@ export default {
     onChartClick (params) {
       console.log('我收到了', params)
     }
+  },
+  ready () {
+    this.LOGS.log('PageDemo', this.token, storage, 'dfsfsd')
+    this.LOGS.log('SL.token', this.token, storage.get(this.token, true))
   },
   created () {
     this.getIncidentData()
