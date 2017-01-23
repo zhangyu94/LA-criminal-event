@@ -261,21 +261,11 @@ export default {
           // 'Resolution': { 'ARREST, BOOKED': 1 }
         }
         // console.log('filter-->', filter)
-        let cloudData = this.calCloudData(data, 10)
-        this.wordleOption = {
-          data: cloudData,
-          wordCloudFont: 'Algerian',
-          wordSize: '40'
-        }
         this.calMatrixOption(filter, data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
         this.calBarChartOption(data)
-        let calendarData = this.calCalendarData(data)
-        this.calendarOption = {
-          data: calendarData,
-          calendarFont: 'Algerian'
-        }
+        this.calCalendarOption(data)
       })
     },
     calMatrixOption (filter, data) {
@@ -312,6 +302,13 @@ export default {
         jud: true
       }
       // console.log(resolutionData)
+    },
+    calCalendarOption (data) {
+      let calendarData = this.calCalendarData(data)
+      this.calendarOption = {
+        data: calendarData,
+        calendarFont: 'Algerian'
+      }
     }
   },
   ready () {
