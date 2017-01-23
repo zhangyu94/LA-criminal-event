@@ -3,19 +3,27 @@
         <div class= "{{ style['area'] }}" id="{{ style['area-histogram1']}}"></div>
         <div class= "{{ style['area'] }}" id="{{ style['area-histogram2']}}"></div>
         <div class= "{{ style['area'] }}" id="{{ style['area-matrix']}}">
-            <matrix :chart-option="matrixOption"></matrix>
+            <container>
+                <matrix slot="content" :chart-option="matrixOption"></matrix>
+            </container>
         </div>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-calendar']}}">
         <!--里面放蒋瑞柯的3个月的calendar-->
-        <calendar :chart-option="calendarOption"></calendar>
+        <container>
+            <calendar slot="content" :chart-option="calendarOption"></calendar>
+        </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-map']}}">里面放刘强强的map</div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-category']}}">
-        <bar-chart :chart-option="barChartOptionCat"></bar-chart>
+        <container>
+            <bar-chart slot="content" :chart-option="barChartOptionCat"></bar-chart>
+        </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-resolution']}}">
-        <bar-chart :chart-option="barChartOptionRes"></bar-chart>
+        <container>
+            <bar-chart slot="content" :chart-option="barChartOptionRes"></bar-chart>
+        </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-wordle']}}">
         <container>

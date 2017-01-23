@@ -1,4 +1,6 @@
 <div id="{{ elId }}" class="{{ style['container'] }}">
-    <button class="container-btn">mark</button>
-    <slot name="content"></slot>
+    <button class="{{ style['container-btn'] }}" v-on:click="onClickMark">mark</button>
+    <div class="{{ style['content-wrapper'] }}">
+        <slot name="content"></slot>
+    </div>
 </div>

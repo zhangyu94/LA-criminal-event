@@ -1,6 +1,5 @@
 import style from './style.less'
 import template from './template.html'
-import d3 from 'd3'
 import $ from 'jquery'
 import {markContainer} from '../../vuex/actions'
 
@@ -25,15 +24,15 @@ export default {
   },
   methods: {
     render () {
+
+    },
+    onClickMark () {
       let containerId = this.elId
-      d3.select('#' + containerId)
-        .selectAll('.container-btn')
-        .on('click', () => {
-          let container = $('#' + containerId)
-          this.markContainer({
-            content: container.find('div').html()
-          })
-        })
+      let container = $('#' + containerId)
+      console.log(container)
+      this.markContainer({
+        content: container.find('div').html()
+      })
     }
   },
   ready () {
