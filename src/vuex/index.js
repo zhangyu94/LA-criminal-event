@@ -28,7 +28,27 @@ const mutations = {
   [types.MARK_CONTAINER] (state, markedContainer) {
     state.markedContainer = markedContainer
     console.log(state)
-  }
+  },
+  [types.FILTER_DATE] (state, filteredDate) {
+    state.filteredDate = filteredDate
+    console.log(state)
+  },
+  [types.FILTER_DAY_OF_WEEK] (state, filteredDayOfWeek) {
+    state.filteredDayOfWeek = filteredDayOfWeek
+    console.log(state)
+  },
+  [types.FILTER_TIME] (state, filteredTime) {
+    state.filteredTime = filteredTime
+    console.log(state)
+  },
+  [types.FILTER_CATEGORY] (state, filteredCategory) {
+    state.filteredCategory = filteredCategory
+    console.log(state)
+  },
+  [types.FILTER_RESOLUTION] (state, filteredResolution) {
+    state.filteredResolution = filteredResolution
+    console.log(state)
+  },
 }
 
 export default new Vuex.Store({
