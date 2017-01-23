@@ -2,7 +2,6 @@ import style from './style.less'
 import template from './template.html'
 import d3 from 'd3'
 import cloud from 'd3-cloud'
-import 'jquery'
 
 export default {
   template,
@@ -10,7 +9,7 @@ export default {
   data () {
     return {
       style,
-      elId: `Wordle-${(+new Date())}-${Math.random() * 100 * 1000 * 1000}`
+      elId: `Wordle-${(+new Date())}-${~~(Math.random() * 100 * 1000 * 1000)}`
     }
   },
 
@@ -59,7 +58,7 @@ export default {
             })
             .text(function (d) { return d.text })
       }
-      let svg = d3.select(document.getElementById(this.elId))
+      let svg = d3.select('#' + this.elId)
         .select('svg')
       let [svgWidth, svgHeight] = calSvgSize(svg)
       cloud().size([ svgWidth, svgHeight ])

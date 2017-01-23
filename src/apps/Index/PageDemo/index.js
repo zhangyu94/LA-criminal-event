@@ -3,11 +3,14 @@
  */
 import style from './style.less'
 import template from './template.html'
+import Container from '../../../components/Container'
 import LineChart from '../../../components/LineChart'
 import Matrix from '../../../components/Matrix'
 import Wordle from '../../../components/Wordle'
 import BarChart from '../../../components/BarChart'
+import Calendar from '../../../components/Calendar'
 import $ from 'jquery'
+import d3 from 'd3'
 
 export default {
   template,
@@ -18,16 +21,48 @@ export default {
       barChartOptionRes: null,
       lineChartOption: null,
       matrixOption: null,
-      wordleOption: null
+      wordleOption: null,
+      calendarOption: null
     }
   },
   components: {
+    Container,
     LineChart,
     Matrix,
     BarChart,
-    Wordle
+    Wordle,
+    Calendar
   },
   methods: {
+    DataFilter (filter, data) {
+      let DataAfterFilter = []
+      let keyList = Object.keys(filter)
+      if (keyList.length === 0) {
+        DataAfterFilter = data.concat()
+      }
+      if (keyList.length > 0) {
+        data.forEach(function (d) {
+          let t = 0
+          keyList.forEach(function (k) {
+            if (k === 'Time') {
+              if (d[ k ].substr(0, 2) in filter[ k ]) {
+                t++
+              }
+            }
+            if (k !== 'Time') {
+              if (d[ k ] in filter[ k ]) {
+                t++
+              }
+            }
+          })
+          if (t === keyList.length) {
+            DataAfterFilter.push(d)
+          }
+        })
+      }
+      // console.log('DataAfterFilter-->', DataAfterFilter)
+      return DataAfterFilter
+    },
     CalTimeList (data) {
       let TimeList = []
       data.forEach(function (d, i) {
@@ -42,7 +77,6 @@ export default {
       let itemList = []
       let itemSet = []
       let CategoryList = []
-      let totalSet = []
       data.forEach(function (d, i) {
         itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2), Category: d.Category })
         if (CategoryList.indexOf(d.Category) === -1) {
@@ -66,18 +100,18 @@ export default {
           itemSet[ d.Category ].push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
         }
 
-        let isInTotal = false
-        totalSet.forEach(function (c) {
-          if (d.DayOfWeek === c.DayOfWeek && d.Time === c.Time) {
-            c.number++
-            isInTotal = true
-          }
-        })
-        if (isInTotal === false) {
-          totalSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
-        }
+        // let isInTotal = false
+        // totalSet.forEach(function (c) {
+        //   if (d.DayOfWeek === c.DayOfWeek && d.Time === c.Time) {
+        //     c.number++
+        //     isInTotal = true
+        //   }
+        // })
+        // if (isInTotal === false) {
+        //   totalSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+        // }
       })
-      itemSet[ 'total' ] = totalSet
+      // itemSet[ 'total' ] = totalSet
       console.log('MatrixDataProcess-->', itemSet)
       return itemSet
     },
@@ -179,18 +213,71 @@ export default {
       return [ ResolutionData, ResolutionCount ]
     },
 
+    calCalendarData (data) {
+      let calData = d3.nest()
+        .key(function (d) {
+          let calDate = d.Date + '/'
+          let calI = 0
+          let calMonth = ''
+          let calDay = ''
+          let calYear = ''
+          for (calI = 0; calDate[ calI ] !== '/'; calI++) {
+            calMonth = calMonth + calDate[ calI ]
+          }
+          if (calMonth.length === 1) calMonth = '0' + calMonth
+          for (calI = calI + 1; calDate[ calI ] !== '/'; calI++) {
+            calDay = calDay + calDate[ calI ]
+          }
+          if (calDay.length === 1) calDay = '0' + calDay
+          for (calI = calI + 1; calDate[ calI ] !== '/'; calI++) {
+            calYear = calYear + calDate[ calI ]
+          }
+          return calYear + '-' + calMonth + '-' + calDay
+        })
+        .rollup(function (d) {
+          let calLen = d.length
+          let calSum = 0
+          for (let calI = 0; calI < calLen; calI++) {
+            calSum = calSum + 1
+          }
+          return calSum
+        })
+        .map(data)
+      console.log(calData)
+      return calData
+    },
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
-        // console.log('incident=>', data)
-        this.calMatrixOption(data)
+        console.log('incident=>', data)
+        let filter = {
+          // 'Date': { '11/25/2016': 1 },
+          // 'DayOfWeek': { 'Friday': 1 }
+          // 'Time': { '18': 1 }
+          // 'Category': { 'NON-CRIMINAL': 1 },
+          // 'Resolution': { 'ARREST, BOOKED': 1 }
+        }
+        // console.log('filter-->', filter)
+        let cloudData = this.calCloudData(data, 10, [])
+        this.wordleOption = {
+          data: cloudData,
+          wordCloudFont: 'Algerian',
+          wordSize: '40'
+        }
+        this.calMatrixOption(filter, data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
+        let calendarData = this.calCalendarData(data)
+        this.calendarOption = {
+          data: calendarData,
+          calendarFont: 'Algerian'
+        }
         this.calCrimeCatOption(data)
         this.calCrimeResOption(data)
       })
     },
-    calMatrixOption (data) {
-      let MatrixData = this.MatrixDataProcess(data)
+    calMatrixOption (filter, data) {
+      let DataFilter = this.DataFilter(filter, data)
+      let MatrixData = this.MatrixDataProcess(DataFilter)
       let TimeList = this.CalTimeList(data)
       let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
       this.matrixOption = {
