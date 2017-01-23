@@ -1,40 +1,40 @@
 <div :id="style.PageDemo">
     <div class= "{{ style['area'] }}" id="{{ style['area-big-matrix']}}">
         <div class= "{{ style['area'] }}" id="{{ style['area-histogram1']}}">
-            <container>
+            <container title="Histogram of Aggregated Event Frequency in 24 Hours of a Day">
                 <bar-chart slot="content" :chart-option="timeOption"></bar-chart>
             </container>
         </div>
         <div class= "{{ style['area'] }}" id="{{ style['area-histogram2']}}">
-            <container>
+            <container title="Histogram of Aggregated Event Frequency in 7 Days of Week">
                 <bar-chart-hor slot="content" :chart-option="dayOption"></bar-chart-hor>
             </container>
         </div>
         <div class= "{{ style['area'] }}" id="{{ style['area-matrix']}}">
-            <container>
+            <container title="Matrix of Aggregated Event Frequency in 24 Hours of 7 Days of Week">
                 <matrix slot="content" :chart-option="matrixOption"></matrix>
             </container>
         </div>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-calendar']}}">
         <!--里面放蒋瑞柯的3个月的calendar-->
-        <container>
+        <container title="Calendar">
             <calendar slot="content" :chart-option="calendarOption"></calendar>
         </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-map']}}">里面放刘强强的map</div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-category']}}">
-        <container>
+        <container title="Histogram of Event Category">
             <bar-chart slot="content" :chart-option="barChartOptionCat"></bar-chart>
         </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-hist-resolution']}}">
-        <container>
+        <container title="Histogram of Event Resolution">
             <bar-chart slot="content" :chart-option="barChartOptionRes"></bar-chart>
         </container>
     </div>
     <div class= "{{ style['area']}}" id="{{ style['area-wordle']}}">
-        <container>
+        <container title="Wordle of Word Frequency in Description">
             <wordle slot="content" :chart-option="wordleOption"></wordle>
         </container>
     </div>

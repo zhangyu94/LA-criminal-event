@@ -29,8 +29,10 @@ export default {
     onClickMark () {
       let containerId = this.elId
       let container = $('#' + containerId)
-      console.log(container)
+      let title = container.attr('title')
+      this.LOGS.log('Container', title)
       this.markContainer({
+        title: title,
         content: container.find('div').html()
       })
     }

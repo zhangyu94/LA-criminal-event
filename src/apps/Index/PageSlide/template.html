@@ -1,22 +1,17 @@
 <div :id="style.PageSlide" class="reveal">
     <div class="slides">
-        <!--
-        <section v-for="item in markedContainerList">
-            <h2>Barebones Presentation</h2>
-            {{{item.content}}}
-        </section>
-        -->
-
         <section class= "{{ style['wrapper-slide']}}">
             <h2>Discoveries</h2>
             <section class="{{ style['content-slide']}}" v-for="item in markedContainerList">
+                <h4>{{item.title}}</h4>
                 {{{item.content}}}
+                <pre>
+                    <code data-trim contenteditable style="font-size: 18px;"></code>
+                </pre>
             </section>
         </section>
-
         <section>
             <h2>The End</h2>
         </section>
-
     </div>
 </div>
