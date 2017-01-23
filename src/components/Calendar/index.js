@@ -34,7 +34,7 @@ export default {
       let calendarData = {}
       let shiftKey = false
 
-      console.log('hello', this.chartOption.data['2016-11-25'])
+      // console.log('hello', this.chartOption.data['2016-11-25'])
       for (let calendarDateData in this.chartOption.data) {
         // calendarData.push([calendarDateData, this.chartOption.data[calendarDateData]])
         calendarData[calendarDateData] = this.chartOption.data[calendarDateData]

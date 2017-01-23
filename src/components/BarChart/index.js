@@ -25,10 +25,9 @@ export default {
       if (!this.chartOption) {
         return
       }
-      console.log('manan')
       let svg = d3.select(document.getElementById(this.elId))
         .select('svg')
-      let margin = { top: 10, right: 10, bottom: 1, left: 10 }
+      let margin = { top: 10, right: 0, bottom: 1, left: 0 }
       let width = this.$el.clientWidth - margin.left - margin.right
       let height = this.$el.clientHeight - margin.top - margin.bottom
       // console.log(width)
@@ -82,8 +81,8 @@ export default {
         .on('click', function (d) {
           // clicked = (clicked + 1) % 2
           // console.log('llllll')
-          d3.selectAll('elId')
-            .style('opacity', 0.2)
+          // d3.select('#this.elId')
+          //   .style('opacity', 0.2)
           for (let i = 0; i < trans.length; i++) {
             if (trans[i] === d.keyword) {
               flag = 1
@@ -97,13 +96,13 @@ export default {
           if (flag === 0) {
             trans.push(d.keyword)
             d3.select(this)
-              .attr('fill', 'red')
+              .attr('fill', 'orange')
           } else {
             d3.select(this)
               .attr('fill', 'steelblue')
           }
           flag = 0
-          console.log(trans)
+          // console.log(trans)
         })
         .append('svg:title')
         .text(function (d) { return d.keyword + ': ' + d.data })
