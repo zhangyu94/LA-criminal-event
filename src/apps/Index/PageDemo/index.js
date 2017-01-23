@@ -8,6 +8,7 @@ import LineChart from '../../../components/LineChart'
 import Matrix from '../../../components/Matrix'
 import Wordle from '../../../components/Wordle'
 import BarChart from '../../../components/BarChart'
+import BarChartHor from '../../../components/BarChartHor'
 import Calendar from '../../../components/Calendar'
 import $ from 'jquery'
 import d3 from 'd3'
@@ -29,7 +30,9 @@ export default {
       lineChartOption: null,
       matrixOption: null,
       wordleOption: null,
-      calendarOption: null
+      calendarOption: null,
+      timeOption: null,
+      dayOption: null
     }
   },
   components: {
@@ -37,6 +40,7 @@ export default {
     LineChart,
     Matrix,
     BarChart,
+    BarChartHor,
     Wordle,
     Calendar
   },
@@ -173,10 +177,6 @@ export default {
 
       for (let category in dictCategory) {
         Category.push(category)
-        // let curCount = dictCategory[category]
-        // CategoryData[i][0] = category
-        // CategoryData[i][1] = dictCategory[category]
-        // i++
       }
       for (let i = 0; i < Category.length; i++) {
         CategoryCount[ i ] = dictCategory[ Category[ i ] ]
@@ -186,7 +186,6 @@ export default {
       for (let i = 0; i < Category.length; i++) {
         CategoryData.push({ data: CategoryCount[ i ], keyword: Category[ i ] })
       }
-      // console.log(CategoryData)
       return [ CategoryData, CategoryCount ]
     },
     CrimeResolutionData (data) {
@@ -264,8 +263,11 @@ export default {
         this.calMatrixOption(filter, data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
-        this.calBarChartOption(data)
+        this.calCrimeCatOption(data)
+        this.calCrimeResOption(data)
         this.calCalendarOption(data)
+        this.calTimeOption(filter, data)
+        this.calDayOption(filter, data)
       })
     },
     calMatrixOption (filter, data) {
@@ -287,21 +289,72 @@ export default {
         wordSize: '40'
       }
     },
-    calBarChartOption (data) {
-      // console.log('incident=>', data)
+    calCrimeCatOption (data) {
       let [ categoryData, catCount ] = this.CrimeCategoryData(data)
-      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
       this.barChartOptionCat = {
         in: categoryData,
         count: catCount,
         jud: true
       }
+    },
+    calCrimeResOption (data) {
+      let [ resolutionData, resCount ] = this.CrimeResolutionData(data)
       this.barChartOptionRes = {
         in: resolutionData,
         count: resCount,
         jud: true
       }
-      // console.log(resolutionData)
+    },
+    calTimeOption (filter, data) {
+      let DataFilter = this.DataFilter(filter, data)
+      let MatrixData = this.MatrixDataProcess(DataFilter)
+      let TimeCount = []
+      for (let i = 0; i < 24; i++) {
+        TimeCount[i] = 0
+      }
+      let TimeData = []
+      let TimeList = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+      for (let i = 0; i < MatrixData.length; i++) {
+        for (let j = 0; j < 24; j++) {
+          if (MatrixData[i].Time === TimeList[j]) {
+            TimeCount[j] = TimeCount[j] + MatrixData[i].number
+          }
+        }
+        // console.log(MatrixData[i].Time)
+      }
+      for (let i = 0; i < 24; i++) {
+        TimeData.push({data: TimeCount[i], keyword: TimeList[i]})
+      }
+      this.timeOption = {
+        in: TimeData,
+        count: TimeCount,
+        jud: true
+      }
+    },
+    calDayOption (filter, data) {
+      let DataFilter = this.DataFilter(filter, data)
+      let MatrixData = this.MatrixDataProcess(DataFilter)
+      let DayCount = []
+      for (let i = 0; i < 7; i++) {
+        DayCount[i] = 0
+      }
+      let DayData = []
+      let DayList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
+      for (let i = 0; i < MatrixData.length; i++) {
+        for (let j = 0; j < 7; j++) {
+          if (MatrixData[i].DayOfWeek === DayList[j]) {
+            DayCount[j] = DayCount[j] + MatrixData[i].number
+          }
+        }
+      }
+      for (let i = 0; i < 7; i++) {
+        DayData.push({data: DayCount[i], keyword: DayList[i]})
+      }
+      this.dayOption = {
+        in: DayData,
+        count: DayCount,
+        jud: true
+      }
     },
     calCalendarOption (data) {
       let calendarData = this.calCalendarData(data)

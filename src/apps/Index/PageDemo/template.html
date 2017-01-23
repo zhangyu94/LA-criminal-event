@@ -1,7 +1,11 @@
 <div :id="style.PageDemo">
     <div class= "{{ style['area'] }}" id="{{ style['area-big-matrix']}}">
-        <div class= "{{ style['area'] }}" id="{{ style['area-histogram1']}}"></div>
-        <div class= "{{ style['area'] }}" id="{{ style['area-histogram2']}}"></div>
+        <div class= "{{ style['area'] }}" id="{{ style['area-histogram1']}}">
+            <bar-chart :chart-option="timeOption"></bar-chart>
+        </div>
+        <div class= "{{ style['area'] }}" id="{{ style['area-histogram2']}}">
+            <bar-chart-hor :chart-option="dayOption"></bar-chart-hor>
+        </div>
         <div class= "{{ style['area'] }}" id="{{ style['area-matrix']}}">
             <container>
                 <matrix slot="content" :chart-option="matrixOption"></matrix>
