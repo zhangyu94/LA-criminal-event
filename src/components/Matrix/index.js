@@ -15,16 +15,17 @@ export default {
 
   watch: {
     chartOption () {
-      this.render('total')
+      this.render()
     }
   },
 
   methods: {
-    render (filter) {
+    render () {
       if (!this.chartOption) {
         return
       }
       let matrixData = this.chartOption
+      console.log('new-->', matrixData.data)
       // let margin = {top: 20, right: 20, bottom: 20, left: 20},
       let width = this.$el.clientWidth
       let height = this.$el.clientHeight
@@ -69,10 +70,10 @@ export default {
       //   .style('dominant-baseline', 'text-before-edge')
       //   .attr('transform', function(d, i){ return 'translate(' + i * gridWidth + ',-10)';})
       //   .attr('class', 'TimeName');
-      let myData = matrixData.data[filter]
+      let myData = matrixData.data
 
       let colorScale = d3.scale.quantile()
-        .domain(d3.extent(matrixData.data[filter], function (d) { return d.number }))
+        .domain(d3.extent(matrixData.data, function (d) { return d.number }))
         .range(colors)
 
       let cards = svg.selectAll('.NumberRect')
@@ -124,6 +125,6 @@ export default {
     }
   },
   ready () {
-    this.render('total')
+    this.render()
   }
 }

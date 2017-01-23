@@ -15,7 +15,8 @@ const state = {
   activeRouter: null,
   status: {
     url: null
-  }
+  },
+  markedContainer: null
 }
 
 const mutations = {
@@ -23,6 +24,10 @@ const mutations = {
     state.ctx = ctx
     state.activeRouter = router
     utils.setStatus(state, 'url', types.URL_CHANGE)
+  },
+  [types.MARK_CONTAINER] (state, markedContainer) {
+    state.markedContainer = markedContainer
+    console.log(state)
   }
 }
 

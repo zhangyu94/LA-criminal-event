@@ -53,18 +53,16 @@ export default {
         // console.log(gData)
         let merge = {}
         let quakePoints = []
-        let timeStart = Date.parse('11/25/2016 00:00')
-        let timeEnd = Date.parse('11/30/2016 00:00')
         for (let i = 0; i < gData.length; i++) {
-          if (gData[ i ].timestamp >= timeStart && gData[ i ].timestamp <= timeEnd) {
-            gData[ i ].flag = String(gData[ i ].X) + String(gData[ i ].Y)
-            quakePoints.push(gData[ i ].latLng)
-            cities.push(gData[ i ])
-            if (!merge[ gData[ i ].latLng ]) {
-              merge[ gData[ i ].latLng ] = []
-            }
-            merge[ gData[ i ].latLng ].push(gData[ i ])
+          // if (gData[ i ].timestamp >= timeStart && gData[ i ].timestamp <= timeEnd) {
+          gData[ i ].flag = String(gData[ i ].X) + String(gData[ i ].Y)
+          quakePoints.push(gData[ i ].latLng)
+          cities.push(gData[ i ])
+          if (!merge[ gData[ i ].latLng ]) {
+            merge[ gData[ i ].latLng ] = []
           }
+          merge[ gData[ i ].latLng ].push(gData[ i ])
+          // }
         }
         let calData = []
         for (let key in merge) {
@@ -74,6 +72,11 @@ export default {
           calData.push({ 'latLng': loc, 'data': merge[ key ] })
         }
         cities = calData
+        L.heatLayer([], {
+          radius: 10,
+          blur: 15,
+          maxZoom: 17
+        }).addTo(map)
         L.heatLayer(quakePoints, {
           radius: 10,
           blur: 15,
