@@ -9,6 +9,7 @@ import Matrix from '../../../components/Matrix'
 import Wordle from '../../../components/Wordle'
 import BarChart from '../../../components/BarChart'
 import Calendar from '../../../components/Calendar'
+import AreaMap from '../../../components/AreaMap'
 import $ from 'jquery'
 import d3 from 'd3'
 import storage from '../../../commons/storage'
@@ -29,7 +30,8 @@ export default {
       lineChartOption: null,
       matrixOption: null,
       wordleOption: null,
-      calendarOption: null
+      calendarOption: null,
+      mapOption: null
     }
   },
   components: {
@@ -38,7 +40,8 @@ export default {
     Matrix,
     BarChart,
     Wordle,
-    Calendar
+    Calendar,
+    AreaMap
   },
   methods: {
     DataFilter (filter, data) {
@@ -266,7 +269,11 @@ export default {
         this.calWordleOption(data)
         this.calBarChartOption(data)
         this.calCalendarOption(data)
+        this.calMapOption(data)
       })
+    },
+    calMapOption (data) {
+      this.mapOption = data
     },
     calMatrixOption (filter, data) {
       let DataFilter = this.DataFilter(filter, data)
