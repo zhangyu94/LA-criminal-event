@@ -14,6 +14,12 @@ export default {
       urlChange
     }
   },
+  props: {
+    token: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       style,
