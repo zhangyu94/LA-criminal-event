@@ -77,17 +77,12 @@ export default {
       let itemList = []
       let itemSet = []
       let CategoryList = []
-      // let totalSet = []
       data.forEach(function (d, i) {
         itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2) })
         if (CategoryList.indexOf(d.Category) === -1) {
           CategoryList.push(d.Category)
         }
       })
-
-      // CategoryList.forEach(function (d) {
-      //   itemSet[ d ] = []
-      // })
 
       itemList.forEach(function (d) {
         let isIn = false
@@ -253,29 +248,19 @@ export default {
         console.log('incident=>', data)
         let filter = {
           // 'Date': { '11/25/2016': 1 },
-          // 'DayOfWeek': { 'Friday': 1 },
-          // 'Time': { '18': 1 },
+          // 'DayOfWeek': { 'Friday': 1 }
+          // 'Time': { '18': 1 }
           // 'Category': { 'NON-CRIMINAL': 1 },
-          // 'Resolution': { 'LOCATED': 1 }
+          // 'Resolution': { 'ARREST, BOOKED': 1 }
         }
         // console.log('filter-->', filter)
-        let DataFilter = this.DataFilter(filter, data)
-        let MatrixData = this.MatrixDataProcess(DataFilter)
-        let TimeList = this.CalTimeList(data)
-        let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
-        this.matrixOption = {
-          data: MatrixData,
-          DayOfWeekList: DayOfWeekList,
-          TimeList: TimeList
-        }
-        // console.log('matrix===>',MatrixData)
         let cloudData = this.calCloudData(data, 10, [])
         this.wordleOption = {
           data: cloudData,
           wordCloudFont: 'Algerian',
           wordSize: '40'
         }
-        this.calMatrixOption(data)
+        this.calMatrixOption(filter, data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
         this.calBarChartOption(data)
@@ -286,8 +271,9 @@ export default {
         }
       })
     },
-    calMatrixOption (data) {
-      let MatrixData = this.MatrixDataProcess(data)
+    calMatrixOption (filter, data) {
+      let DataFilter = this.DataFilter(filter, data)
+      let MatrixData = this.MatrixDataProcess(DataFilter)
       let TimeList = this.CalTimeList(data)
       let DayOfWeekList = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ]
       this.matrixOption = {
