@@ -37,7 +37,7 @@ export default {
     }
   },
   created () {
-
+    this.LOGS.log('My Name1', 123, 456, 788, { a: 123 })
   },
   ready () {
     console.log('PageSlide render markedContainer', this.markedContainer)
