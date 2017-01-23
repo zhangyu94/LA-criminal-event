@@ -78,7 +78,7 @@ export default {
         }
       })
       itemSet[ 'total' ] = totalSet
-      console.log('MatrixDataProcess-->', itemSet)
+      // console.log('MatrixDataProcess-->', itemSet)
 
       return itemSet
     },
@@ -182,7 +182,7 @@ export default {
 
     getIncidentData () {
       $.getJSON('/api/get_incident_san_francisco', (data) => {
-        console.log('incident=>', data)
+        // console.log('incident=>', data)
         this.calMatrixOption(data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
@@ -208,7 +208,7 @@ export default {
         wordSize: '40'
       }
     },
-    calCrimeCatOption(data) {
+    calCrimeCatOption (data) {
       let [ categoryData, catCount ] = this.CrimeCategoryData(data)
       this.barChartOptionCat = {
         in: categoryData,

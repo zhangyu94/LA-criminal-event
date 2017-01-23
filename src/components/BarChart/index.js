@@ -25,7 +25,7 @@ export default {
       if (!this.chartOption) {
         return
       }
-
+      console.log('manan')
       let svg = d3.select(document.getElementById(this.elId))
         .select('svg')
       let margin = { top: 10, right: 10, bottom: 1, left: 10 }
@@ -59,6 +59,10 @@ export default {
 
       let rectPadding = 2
 
+      let trans = []
+      let flag = 0
+      // let clicked = 0
+
       svg.selectAll('.bar')
         .data(dataset)
         .enter().append('rect')
@@ -75,8 +79,50 @@ export default {
           let h = height - yScale(d.data)
           return h
         })
+        .attr('fill', 'steelblue')
+        .on('click', function (d, i) {
+          // clicked = (clicked + 1) % 2
+          console.log('llllll')
+          d3.selectAll('.bar')
+            .style('opacity', 0.2)
+          for (let i = 0; i < trans.length; i++) {
+            if (trans[i] === d.keyword) {
+              flag = 1
+              for (let j = i; j < trans.length - 1; j++) {
+                trans[j] = trans[j + 1]
+              }
+              trans.length = trans.length - 1
+              break
+            }
+          }
+          if (flag === 0) {
+            trans.push(d.keyword)
+            d3.select(this)
+              .attr('fill', 'red')
+          } else {
+            d3.select(this)
+              .attr('fill', 'steelblue')
+          }
+          flag = 0
+          console.log(trans)
+        })
         .append('svg:title')
         .text(function (d) { return d.keyword + ': ' + d.data })
+
+        // .on('mouseover', function (d, i) {
+        //   if (clicked % 2 === 0) {
+        //     d3.select(this)
+        //       .attr('fill', 'orange')
+        //   }
+        // })
+        // .on('mouseout', function (d, i) {
+        //   if (clicked % 2 === 0) {
+        //     d3.select(this)
+        //       .transition()
+        //       .duration(500)
+        //       .attr('fill', 'steelblue')
+        //   }
+        // })
 
       // // 添加x轴
       // svg.append('g')
