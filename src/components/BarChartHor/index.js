@@ -36,7 +36,7 @@ export default {
       let dataset = this.chartOption.in
 
       let xScale = d3.scale.linear()
-        .domain([ 3000, d3.max(this.chartOption.count) ])
+        .domain([ 4000, d3.max(this.chartOption.count) ])
         .range([ 0, width ])
 
       let yScale = d3.scale.ordinal()
