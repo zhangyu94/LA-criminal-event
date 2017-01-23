@@ -22,26 +22,17 @@ export default {
   watch: {
     markedContainer () {
       console.log('PageSlide markedContainer', this.markedContainer)
-      this.appendSlide(this.markedContainer)
     }
   },
   components: {},
   methods: {
-    appendSlide (containerHtml) {
-      if (containerHtml === null) {
-        return
-      }
-      console.log('appendslide', containerHtml)
-      // console.log('template', this.template)
-      document.getElementById('sect1').innerHTML += containerHtml
-    }
+
   },
   created () {
     this.LOGS.log('My Name1', 123, 456, 788, { a: 123 })
   },
   ready () {
     console.log('PageSlide render markedContainer', this.markedContainer)
-    this.appendSlide(this.markedContainer)
     Reveal.initialize()
   }
 }
