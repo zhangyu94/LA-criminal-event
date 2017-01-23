@@ -25,10 +25,9 @@ export default {
       if (!this.chartOption) {
         return
       }
-
       let svg = d3.select(document.getElementById(this.elId))
         .select('svg')
-      let margin = { top: 10, right: 10, bottom: 1, left: 10 }
+      let margin = { top: 10, right: 0, bottom: 1, left: 0 }
       let width = this.$el.clientWidth - margin.left - margin.right
       let height = this.$el.clientHeight - margin.top - margin.bottom
       // console.log(width)
@@ -59,6 +58,10 @@ export default {
 
       let rectPadding = 2
 
+      let trans = []
+      let flag = 0
+      // let clicked = 0
+
       svg.selectAll('.bar')
         .data(dataset)
         .enter().append('rect')
@@ -72,11 +75,52 @@ export default {
         })
         .attr('width', xScale.rangeBand() - rectPadding)
         .attr('height', function (d) {
-          let h = height - yScale(d.data)
-          return h
+          return (height - yScale(d.data))
+        })
+        .attr('fill', 'steelblue')
+        .on('click', function (d) {
+          // clicked = (clicked + 1) % 2
+          // console.log('llllll')
+          // d3.select('#this.elId')
+          //   .style('opacity', 0.2)
+          for (let i = 0; i < trans.length; i++) {
+            if (trans[i] === d.keyword) {
+              flag = 1
+              for (let j = i; j < trans.length - 1; j++) {
+                trans[j] = trans[j + 1]
+              }
+              trans.length = trans.length - 1
+              break
+            }
+          }
+          if (flag === 0) {
+            trans.push(d.keyword)
+            d3.select(this)
+              .attr('fill', 'orange')
+          } else {
+            d3.select(this)
+              .attr('fill', 'steelblue')
+          }
+          flag = 0
+          // console.log(trans)
         })
         .append('svg:title')
         .text(function (d) { return d.keyword + ': ' + d.data })
+
+        // .on('mouseover', function (d, i) {
+        //   if (clicked % 2 === 0) {
+        //     d3.select(this)
+        //       .attr('fill', 'orange')
+        //   }
+        // })
+        // .on('mouseout', function (d, i) {
+        //   if (clicked % 2 === 0) {
+        //     d3.select(this)
+        //       .transition()
+        //       .duration(500)
+        //       .attr('fill', 'steelblue')
+        //   }
+        // })
 
       // // 添加x轴
       // svg.append('g')
