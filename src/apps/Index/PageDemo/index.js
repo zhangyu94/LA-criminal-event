@@ -78,26 +78,22 @@ export default {
       let itemSet = []
       let CategoryList = []
       data.forEach(function (d, i) {
-        itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2), Category: d.Category })
+        itemList.push({ DayOfWeek: d.DayOfWeek, Time: d.Time.substr(0, 2) })
         if (CategoryList.indexOf(d.Category) === -1) {
           CategoryList.push(d.Category)
         }
       })
 
-      CategoryList.forEach(function (d) {
-        itemSet[ d ] = []
-      })
-
       itemList.forEach(function (d) {
         let isIn = false
-        itemSet[ d.Category ].forEach(function (c) {
+        itemSet.forEach(function (c) {
           if (c.DayOfWeek === d.DayOfWeek && c.Time === d.Time) {
             c.number++
             isIn = true
           }
         })
         if (isIn === false) {
-          itemSet[ d.Category ].push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
+          itemSet.push({ DayOfWeek: d.DayOfWeek, Time: d.Time, number: 1 })
         }
 
         // let isInTotal = false
@@ -113,6 +109,7 @@ export default {
       })
       // itemSet[ 'total' ] = totalSet
       console.log('MatrixDataProcess-->', itemSet)
+
       return itemSet
     },
     calCloudData (data, topN, filter) {
@@ -138,9 +135,9 @@ export default {
       }
       let countList = []
       for (let word in dict) {
-        countList.push(+dict[ word ])
+        countList.push(dict[ word ])
       }
-      let sortList = countList.sort(function (a, b) { return b - a })
+      let sortList = countList.sort(function (a, b) { return b - a }) // 直接sort是排序字符串，所以需要写compare函数
       sortList = sortList.slice(0, topN - 1)
       let cloudData = {}
       for (let word in dict) {
@@ -310,7 +307,6 @@ export default {
         jud: true
       }
     },
-
     getLineChartViewData () {
       $.getJSON('/api/get_aqi_beijing', (data) => {
         // console.log('air=>', data)

@@ -205,7 +205,7 @@ export default {
         let d0 = t0.getDay()
         let w0 = d3.time.weekOfYear(t0) - 34
         let d1 = t1.getDay()
-        let w1 = d3.time.weekOfYear(t1)
+        let w1 = d3.time.weekOfYear(t1) - 34
         return 'M' + (w0 + 1) * calCellWidth + ',' + d0 * calCellHeight +
           'H' + w0 * calCellWidth + 'V' + 7 * calCellHeight +
           'H' + w1 * calCellWidth + 'V' + (d1 + 1) * calCellHeight +
