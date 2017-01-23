@@ -1,5 +1,5 @@
 /**
- * Created by manan on 17/1/18.
+ * Created by manan on 17/1/23.
  */
 import style from './style.less'
 import template from './template.html'
@@ -38,14 +38,13 @@ export default {
 
       let xScale = d3.scale.ordinal()
         .domain(d3.range(dataset.length))
-        .rangeBands([ 0, width ])
+        .range([ 0, height ])
 
       // console.log('max')
       // console.log(d3.max(dataset.data))
       let yScale = d3.scale.linear()
-          .domain([ -500, d3.max(this.chartOption.count) ])
-          .range([ height, 0 ])
-
+        .domain([ -500, d3.max(this.chartOption.count) ])
+        .rangeBands([ 0, width ])
       // // 定义x轴
       // let xAxis = d3.svg.axis()
       //   .scale(xScale)
@@ -108,20 +107,20 @@ export default {
         .append('svg:title')
         .text(function (d) { return d.keyword + ': ' + d.data })
 
-        // .on('mouseover', function (d, i) {
-        //   if (clicked % 2 === 0) {
-        //     d3.select(this)
-        //       .attr('fill', 'orange')
-        //   }
-        // })
-        // .on('mouseout', function (d, i) {
-        //   if (clicked % 2 === 0) {
-        //     d3.select(this)
-        //       .transition()
-        //       .duration(500)
-        //       .attr('fill', 'steelblue')
-        //   }
-        // })
+      // .on('mouseover', function (d, i) {
+      //   if (clicked % 2 === 0) {
+      //     d3.select(this)
+      //       .attr('fill', 'orange')
+      //   }
+      // })
+      // .on('mouseout', function (d, i) {
+      //   if (clicked % 2 === 0) {
+      //     d3.select(this)
+      //       .transition()
+      //       .duration(500)
+      //       .attr('fill', 'steelblue')
+      //   }
+      // })
 
       // // 添加x轴
       // svg.append('g')
