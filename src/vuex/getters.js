@@ -12,3 +12,9 @@ export const activeUri = (state) => {
 export const activeRouter = state => state.activeRouter
 
 export const markedContainer = state => state.markedContainer
+
+export const filteredDate = state => state.filteredDate
+export const filteredDayOfWeek = state => state.filteredDayOfWeek
+export const filteredTime = state => state.filteredTime
+export const filteredCategory = state => state.filteredCategory
+export const filteredResolution = state => state.filteredResolution
