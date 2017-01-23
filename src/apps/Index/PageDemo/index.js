@@ -78,8 +78,7 @@ export default {
         }
       })
       itemSet[ 'total' ] = totalSet
-      // console.log('MatrixDataProcess-->', itemSet)
-
+      console.log('MatrixDataProcess-->', itemSet)
       return itemSet
     },
     calCloudData (data, topN, filter) {
