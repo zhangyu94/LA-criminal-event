@@ -140,7 +140,7 @@ export default {
       }
       let countList = []
       for (let word in dict) {
-        countList.push(dict[word])
+        countList.push(dict[ word ])
       }
       let sortList = countList.sort(function (a, b) { return b - a }) // 直接sort是排序字符串，所以需要写compare函数
       sortList = sortList.slice(0, topN - 1)
@@ -223,16 +223,16 @@ export default {
           let calMonth = ''
           let calDay = ''
           let calYear = ''
-          for (calI = 0; calDate[calI] !== '/'; calI++) {
-            calMonth = calMonth + calDate[calI]
+          for (calI = 0; calDate[ calI ] !== '/'; calI++) {
+            calMonth = calMonth + calDate[ calI ]
           }
           if (calMonth.length === 1) calMonth = '0' + calMonth
-          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
-            calDay = calDay + calDate[calI]
+          for (calI = calI + 1; calDate[ calI ] !== '/'; calI++) {
+            calDay = calDay + calDate[ calI ]
           }
           if (calDay.length === 1) calDay = '0' + calDay
-          for (calI = calI + 1; calDate[calI] !== '/'; calI++) {
-            calYear = calYear + calDate[calI]
+          for (calI = calI + 1; calDate[ calI ] !== '/'; calI++) {
+            calYear = calYear + calDate[ calI ]
           }
           return calYear + '-' + calMonth + '-' + calDay
         })
@@ -275,7 +275,6 @@ export default {
           wordCloudFont: 'Algerian',
           wordSize: '40'
         }
-      })
         this.calMatrixOption(data)
         // console.log('matrix===>',MatrixData)
         this.calWordleOption(data)
